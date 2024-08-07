@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+import AdooptedPetContext from "./AdoptedPetContext.js";
 import fetchSearch from "./fetchSearch.js";
 import useBreedList from "./useBreedList";
-// import Pet from "./Pet.jsx";
 import Results from "./Results.jsx";
 
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SeacrhParam = () => {
-  // const [location, setLocation] = useState("");
+  const [adoptedPet] = useContext(AdooptedPetContext);
+
   const [animal, setAnnimal] = useState("");
-  // const [breed, setBreed] = useState("");
-  // const [pets, setPets] = useState([]);
   const [requestParams, setRequestParams] = useState({
     location: "",
     animal: "",
@@ -23,18 +22,6 @@ const SeacrhParam = () => {
 
   const results = useQuery(["search", requestParams], fetchSearch);
   const pets = results?.data?.pets ?? [];
-
-  // useEffect(() => {
-  //   requestPets();
-  // }, []);
-
-  // async function requestPets() {
-  //   const res = await fetch(
-  //     `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
-  //   );
-  //   const json = await res.json();
-  //   setPets(json.pets);
-  // }
 
   return (
     <>
@@ -53,6 +40,11 @@ const SeacrhParam = () => {
             setRequestParams(obj);
           }}
         >
+          {adoptedPet ? (
+            <div>
+              <img src={adoptedPet.images[0]} alt={adoptedPet.name} />
+            </div>
+          ) : null}
           <label htmlFor="location">
             location
             <input
@@ -61,7 +53,6 @@ const SeacrhParam = () => {
               // value={location}
               placeholder="location"
               name="location"
-              // onChange={(e) => setLocation(e.target.value)}
             />
           </label>
           <label htmlFor="animal">

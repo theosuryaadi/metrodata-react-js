@@ -1,8 +1,11 @@
 import { createRoot } from "react-dom/client";
-import SeacrhParam from "./SearchParams";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import Details from "./Details";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
+
+import SeacrhParam from "./SearchParams";
+import Details from "./Details";
+import AdooptedPetContext from "./AdoptedPetContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,14 +17,18 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
+  const adoptedPet = useState(null);
+
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <Link to="/">Peduli Hewan</Link>
-        <Routes>
-          <Route path="/details/:id" element={<Details />} />
-          <Route path="/" element={<SeacrhParam />} />
-        </Routes>
+        <AdooptedPetContext.Provider value={adoptedPet}>
+          <Link to="/">Peduli Hewan</Link>
+          <Routes>
+            <Route path="/details/:id" element={<Details />} />
+            <Route path="/" element={<SeacrhParam />} />
+          </Routes>
+        </AdooptedPetContext.Provider>
       </QueryClientProvider>
     </BrowserRouter>
   );

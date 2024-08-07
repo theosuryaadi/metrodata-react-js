@@ -1,13 +1,17 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
+import AdooptedPetContext from "./AdoptedPetContext";
 import fetchPet from "./fetchPet";
 import Carousel from "./Carousel";
 import ErrorBoundary from "./ErrorBoundary";
 import Modal from "./Modal";
 
 const Details = () => {
+  const navigate = useNavigate();
+  // useContext terdapat set & get juga, namun disini hanya mengunakan set-nya saja, jadi kita bisa memberikan koma sebagai penanda klo kita ingin membuat setnya saja
+  const [, setAdoptedPet] = useContext(AdooptedPetContext);
   const [showModal, setShowModal] = useState(false);
   const params = useParams();
   const results = useQuery(["details", params.id], fetchPet);
@@ -37,7 +41,14 @@ const Details = () => {
             <div>
               <h1>Apakah kamu yakin?</h1>
               <div className="buttons">
-                <button>Yes</button>
+                <button
+                  onClick={() => {
+                    setAdoptedPet(pet);
+                    navigate("/");
+                  }}
+                >
+                  Yes
+                </button>
                 <button onClick={() => setShowModal(false)}>No</button>
               </div>
             </div>
